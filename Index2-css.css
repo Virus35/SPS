@@ -8,4 +8,10 @@ h2{
     font-weight: bold;
     text-align: center;
     padding: 8px;
-}  
+}
+#result{
+  padding: 10px;
+  margin: 5px;
+  text-align: left;
+  color: white;
+} 
