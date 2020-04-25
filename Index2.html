@@ -6,76 +6,74 @@
     <link rel="stylesheet" type="text/css" href="Index2-css.css"/>
   </head>
   <body>
-      <h2>Pick your choice and game will start</h2>
-      <div id="btns">
-          <button id="R">Rock</button>
-          <button id="P">Paper</button>
-          <button id="S">Scissors</button>
-      </div>
+    <h2>Pick your choice and game will start</h2>
+    <div id="btns">
+        <button value="Rock">Rock</button>
+        <button value="Paper">Paper</button>
+        <button value="Scissors">Scissors</button>
+    </div>
+    <div id="result"></div>
     <script>
       let pScore = 0, cScore = 0;
+      
       function compPlay(){
         let possibleMove = ["Rock", "Paper", "Scissors"];
         let move = possibleMove[Math.floor(Math.random()*3)];
         return move;
       }
 
-      function gameRound(player, comp){
+      function gameRound(player, comp = compPlay()){
         let result;
-        if(!(player)){
-          result = "Hmmmmmmm, something is wrong";
-          return result;
-        }
-        player = syntax(player);
+        /*player = syntax(player);*/  //To properly syntax user's input through prompt() -- not required anymore
         if((comp === "Rock" && player === "Scissors") || (comp === "Paper" && player === "Rock") || (comp === "Scissors" && player === "Paper")){
-          result = "It seems like you lost the round, computer chose " + comp + ", and " + comp + " beats " + player + "!";
+          result = "It seems like you lost the round, computer chose " + comp + ", and " + comp + " beats " + player + "!" + "\n";
           cScore++;
           return result;
         }
         else if((player === "Rock" && comp === "Scissors") || (player === "Paper" && comp === "Rock") || (player === "Scissors" && comp === "Paper")){
-          result = "It seems like you won the round, computer chose " + comp + ", and " + player + " beats " + comp + "!";
+          result = "It seems like you won the round, computer chose " + comp + ", and " + player + " beats " + comp + "!" + "\n";
           pScore++;
           return result;
         }
         else if(comp === player){
-          result = "It's a tie, computer also chose " + comp;
+          result = "It's a tie, computer also chose " + comp + "\n";
           cScore++;
           pScore++;
           return result;
         }
-        else{
-          result = "Hmmmmmmm, something is wrong";
-          return result;
-        }
       }
 
-      function syntax(choice){
+      /*function syntax(choice){
         let firstLetter = choice.slice(0, 1);
         let rest = choice.slice(1);
         firstLetter = firstLetter.toUpperCase();
         rest = rest.toLowerCase();
         choice = firstLetter+rest;
         return choice;
-      }
+      }*/
 
-      function game(){
-        for(let i = 0; i < 5; i++){
-          /*let playerMove = prompt("Choose Rock, Paper or Scissors.");*/
-          console.log(gameRound(playerMove, compPlay()));
-          console.log("Player's Score - " + pScore + " | Computer's Score - " + cScore);
-        }
+      function game(e){
+        let pChoice = e.target.getAttribute("value");
+        let msg = gameRound(pChoice);
+        let resultDiv = document.querySelector("#result");
+        let resultP = document.createElement("p");
+        msg += "Player's Score - " + pScore + " | Computer's Score - " + cScore + "\n";
         if(pScore > cScore){
-          console.log("Congratulations! You won the game!");
+          msg += "Congratulations! You won the game!";
         }
         else if(cScore > pScore){
-          console.log("Aww don't be sad, you can play again.");
+          msg += "Aww don't be sad, you can play again.";
         }
         else{
-          console.log("It's a tie!");
+          msg += "It's a tie!";
         }
+        resultP.innerText = msg;
+        resultDiv.appendChild(resultP);
       }
-      console.log("Welcome to this simple rock paper scissors game!\nType in your choice and we will see who wins GL!");
-      game();
+      const pBtnChoice = document.querySelectorAll("#btns > button");
+      pBtnChoice.forEach(btn => btn.addEventListener("click", (e) => {
+        game(e);
+      }));
     </script>
   </body>
 </html>
