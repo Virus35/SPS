@@ -6,7 +6,8 @@
     <link rel="stylesheet" type="text/css" href="Index2-css.css"/>
   </head>
   <body>
-    <h2>Pick your choice and game will start</h2>
+    <h2>Rock, Paper, Scissors</h2>
+    <p>Pick your choice and the game of 5 rounds will start.</p>
     <div id="btns">
         <button value="Rock">Rock</button>
         <button value="Paper">Paper</button>
@@ -14,7 +15,7 @@
     </div>
     <div id="result"></div>
     <script>
-      let pScore = 0, cScore = 0;
+      let pScore = 0, cScore = 0, roundCount = 0;
       
       function compPlay(){
         let possibleMove = ["Rock", "Paper", "Scissors"];
@@ -22,9 +23,8 @@
         return move;
       }
 
-      function gameRound(player, comp = compPlay()){
+      function gameLogic(player, comp = compPlay()){
         let result;
-        /*player = syntax(player);*/  //To properly syntax user's input through prompt() -- not required anymore
         if((comp === "Rock" && player === "Scissors") || (comp === "Paper" && player === "Rock") || (comp === "Scissors" && player === "Paper")){
           result = "It seems like you lost the round, computer chose " + comp + ", and " + comp + " beats " + player + "!" + "\n";
           cScore++;
@@ -43,36 +43,39 @@
         }
       }
 
-      /*function syntax(choice){
-        let firstLetter = choice.slice(0, 1);
-        let rest = choice.slice(1);
-        firstLetter = firstLetter.toUpperCase();
-        rest = rest.toLowerCase();
-        choice = firstLetter+rest;
-        return choice;
-      }*/
-
-      function game(e){
+      function gameRound(e){
         let pChoice = e.target.getAttribute("value");
-        let msg = gameRound(pChoice);
+        let msg = gameLogic(pChoice);
         let resultDiv = document.querySelector("#result");
         let resultP = document.createElement("p");
         msg += "Player's Score - " + pScore + " | Computer's Score - " + cScore + "\n";
-        if(pScore > cScore){
-          msg += "Congratulations! You won the game!";
-        }
-        else if(cScore > pScore){
-          msg += "Aww don't be sad, you can play again.";
-        }
-        else{
-          msg += "It's a tie!";
+        if(roundCount === 5){
+          if(pScore > cScore){
+            msg += "Congratulations! You won the game!";
+          }
+          else if(cScore > pScore){
+            msg += "You lost but don't be sad, you can play again.";
+          }
+          else{
+            msg += "It's a tie!";
+          }
         }
         resultP.innerText = msg;
         resultDiv.appendChild(resultP);
       }
+      
       const pBtnChoice = document.querySelectorAll("#btns > button");
       pBtnChoice.forEach(btn => btn.addEventListener("click", (e) => {
-        game(e);
+        if(roundCount >= 5){
+          const resultPs = document.querySelectorAll("#result > p");
+          const resultDiv = document.querySelector("#result");
+          resultPs.forEach(p => resultDiv.removeChild(p));
+          roundCount = 0;
+          pScore = 0;
+          cScore = 0;
+        }
+        roundCount++;
+        gameRound(e);
       }));
     </script>
   </body>
